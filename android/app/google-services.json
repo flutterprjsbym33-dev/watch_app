@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "602005078913",
+    "project_id": "watch-901e9",
+    "storage_bucket": "watch-901e9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602005078913:android:83ccda2e619921b3da5e80",
+        "android_client_info": {
+          "package_name": "com.example.whatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-OsGotRc8xU5WAI-I5DLhEtgqHbGmXxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
