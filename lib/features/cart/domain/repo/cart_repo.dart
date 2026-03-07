@@ -8,7 +8,7 @@ import 'package:dart_either/dart_either.dart';
 
 abstract class CartRepository {
 //add to cart
-  Future<Either<Failure,bool>> addToCart(CartItem cart);
+  Future<Either<Failure,bool>> addToCart(CartItem cart,String selectedImage);
 
   // remove from cart
   Future<Either<Failure,bool>> removeFromCart(String shoeId);

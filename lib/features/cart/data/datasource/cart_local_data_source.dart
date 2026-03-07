@@ -10,7 +10,7 @@ abstract class CartLocalDataSource{
 
   Future<bool> removeFromCart(String shoeId);
 
-  Future<bool> increaseQty(String shoeId,int qty);
+  Future<CartItem> increaseQty(String shoeId,int qty);
 
   Future<List<CartItem>> getAllCartItems();
 }
@@ -66,12 +66,13 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
 
 
   @override
-  Future<bool> increaseQty(String shoeId, int qty)async {
+  Future<CartItem> increaseQty(String shoeId, int qty)async {
     try{
       final beforeUpdate = cartBox.get(shoeId);
       beforeUpdate!.updateQuantity(qty);
       beforeUpdate.save();
-      return true;
+      final updateQtyProduct = cartBox.get(shoeId);
+      return updateQtyProduct!.fromModel(cartItem: updateQtyProduct);
 
     } on SocketException
     {

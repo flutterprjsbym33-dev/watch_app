@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:whatch/features/cart/domain/entity/cart_entity.dart';
 import 'package:whatch/features/cart/domain/usecase/add_to_car_usecase.dart';
 import 'package:whatch/features/cart/domain/usecase/get_all_cart_items.dart';
 import 'package:whatch/features/cart/domain/usecase/increment_item.dart';
@@ -14,6 +17,15 @@ class CartManagerCubit extends Cubit<CartMainState>
     required this.incrementItem,
     required this.getCartItems
    }):super(CartInitialState());
+
+
+   void addToCart(CartItem cartItem,String selectedImage)async
+   {
+     emit(AddToCartLoadingState());
+    final response = await addToCartUseCase.call(cartItem, selectedImage);
+    response.fold(ifLeft: (failure)=>emit(AddToCartErrorState(errMsg: failure.errMsg)),
+        ifRight: (sucess)=>emit(AddToCartSuccessState(isSucess: sucess)));
+   }
 
 
 

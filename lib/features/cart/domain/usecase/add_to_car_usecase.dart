@@ -10,8 +10,8 @@ class AddToCart {
 
   AddToCart({required this.cartRepository});
 
-  Future<Either<Failure,bool>> call(CartItem item) {
-    return cartRepository.addToCart(item);
+  Future<Either<Failure,bool>> call(CartItem item,String selectedImage) {
+    return cartRepository.addToCart(item,selectedImage);
   }
 
 }

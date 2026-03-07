@@ -3,6 +3,8 @@ import 'package:whatch/features/cart/domain/entity/cart_entity.dart';
 abstract class CartMainState{}
 class CartInitialState extends CartMainState{}
 
+class AddToCartLoadingState extends CartMainState{}
+
 class AddToCartSuccessState extends CartMainState{
   bool isSucess;
   AddToCartSuccessState({required this.isSucess});
