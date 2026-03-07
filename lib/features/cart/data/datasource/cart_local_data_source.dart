@@ -66,15 +66,38 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
 
 
   @override
-  Future<bool> increaseQty(String shoeId, int qty) {
-    // TODO: implement increaseQty
-    throw UnimplementedError();
+  Future<bool> increaseQty(String shoeId, int qty)async {
+    try{
+      final beforeUpdate = cartBox.get(shoeId);
+      beforeUpdate!.updateQuantity(qty);
+      beforeUpdate.save();
+      return true;
+
+    } on SocketException
+    {
+      throw NoInternetException();
+
+    } catch(e)
+    {
+      throw CatchedExpection();
+    }
   }
 
   @override
-  Future<bool> removeFromCart(String shoeId) {
-    // TODO: implement removeFromCart
-    throw UnimplementedError();
+  Future<bool> removeFromCart(String shoeId)async{
+    try{
+      cartBox.delete(shoeId);
+      return true;
+
+
+    } on SocketException
+    {
+      throw NoInternetException();
+
+    } catch(e)
+    {
+      throw CatchedExpection();
+    }
   }
 
 }
