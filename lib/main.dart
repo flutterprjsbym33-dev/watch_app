@@ -6,9 +6,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:whatch/app/widgets/FirstHomeScreen.dart';
 import 'package:whatch/features/banners/domain/bannerUseCases/getBanners.dart';
 import 'package:whatch/features/banners/view/bloc/fetchbannerscubit.dart';
+import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
 import 'package:whatch/features/product/view/bloc/catocubit/catoCubit.dart';
 import 'package:whatch/features/product/view/bloc/productstatecubit.dart';
 import 'package:whatch/utils/di/getitDi.dart';
+import 'package:whatch/utils/di/hiveinit.dart';
 import 'firebase_options.dart';
 
 void main()async {
@@ -16,7 +18,8 @@ void main()async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-   InitAll().registerAll();
+  await HiveInit().intitHive();
+    InitAll().registerAll();
   runApp(const MyApp());
 }
 
@@ -31,7 +34,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProductStateCubit>(
             create: (context)=>InitAll.geiit<ProductStateCubit>()),
         BlocProvider<CatoCubit>(
-            create: (context)=>CatoCubit())
+            create: (context)=>CatoCubit()),
+        BlocProvider<CartManagerCubit>(
+            create: (context)=>InitAll().getIt<CartManagerCubit>())
       ],
         child:  MaterialApp(
 

@@ -37,6 +37,7 @@ class CartModel extends HiveObject {
    // Optional: to link back to original product
 
   CartModel({
+    required this.id,
     required this.selectedImage,
     required this.price,
     required this.title,
@@ -44,8 +45,6 @@ class CartModel extends HiveObject {
     required this.brand,
     required this.quantity,
     required this.dateTime,
-    required this.id
-
   });
 
   // Factory constructor to create CartModel from Product entity
@@ -62,7 +61,7 @@ class CartModel extends HiveObject {
       description: product.discrip,
       brand: product.brand,
       quantity: quantity,
-      dateTime: DateTime.now(),
+      dateTime: product.dateTime,
       // Assuming Product has an id field
     );
   }
@@ -73,6 +72,7 @@ class CartModel extends HiveObject {
     required CartModel cartItem,
   }){
     return CartItem(
+
     id: cartItem.id,
     selectedItemImage: cartItem.selectedImage,
     title: cartItem.title,

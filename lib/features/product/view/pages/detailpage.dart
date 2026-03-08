@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:whatch/features/cart/domain/entity/cart_entity.dart';
+import 'package:whatch/features/cart/view/bloc/cart_states.dart';
+import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
+import 'package:whatch/utils/snackBar.dart';
 
 import '../../domain/productentity/product.dart';
 import '../widget/gradientbackground.dart';
@@ -32,6 +37,7 @@ class _DetailPageState extends State<DetailPage>
 
   // ── reveal: triggered by "Show Details" ─────────────────────────────────
   bool _revealed = false;
+  bool _animateCart = false;
 
   late AnimationController _imageCtrl;   // image moves to top + shrinks
   late AnimationController _titleCtrl;   // title slides from left
@@ -39,7 +45,15 @@ class _DetailPageState extends State<DetailPage>
   late AnimationController _ratingCtrl;  // rating slides from left
   late AnimationController _priceCtrl;   // price slides from right
   late AnimationController _cardCtrl;    // info card from right
-  late AnimationController _btnCtrl;     // order button scales up
+  late AnimationController _btnCtrl;
+  late AnimationController _cartCtrl;// order button scales up
+
+  //cart position/size
+  late Animation<double> _csizeAnimation;
+  late Animation<double> _cxAnimation;
+  late Animation<double> _cyAnimation;
+
+
 
   // image position/size
   late Animation<Alignment> _imageAlign;
@@ -84,6 +98,26 @@ class _DetailPageState extends State<DetailPage>
     _imageSize = Tween<double>(begin: 0.42, end: 0.26).animate( // slightly bigger
       CurvedAnimation(parent: _imageCtrl, curve: Curves.easeInOut),
     );
+
+    // -cart animation --------------------------------------------------------
+    _cartCtrl = _makeCtrl(900);
+    _csizeAnimation = Tween<double>(begin: 80, end: 18).animate(
+      CurvedAnimation(parent: _cartCtrl, curve: Curves.easeOutBack),
+    );
+
+    _cxAnimation = Tween<double>(begin: 120, end: 340).animate(
+      CurvedAnimation(parent: _cartCtrl, curve: Curves.easeInOut),);
+    _cyAnimation = Tween<double>(begin: 650, end: 40).animate(
+      CurvedAnimation(parent: _cartCtrl, curve: Curves.easeInOut),);
+
+    _cartCtrl.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          _animateCart = false; // hide when finished
+        });
+        _cartCtrl.reset();
+      }
+    });
 
     // ── title ────────────────────────────────────────────────────────────
     _titleCtrl = _makeCtrl(500);
@@ -158,6 +192,19 @@ class _DetailPageState extends State<DetailPage>
     _btnCtrl.forward();                    // button scales up (slow)
   }
 
+
+  // - OrderNow Triggers ----------------------------------------------------
+
+  Future<void> animateCart()async
+  {
+    if(_animateCart) return;
+    setState(() {
+      _animateCart = true;
+    });
+
+    _cartCtrl.forward();
+  }
+
   // ── helpers ──────────────────────────────────────────────────────────────
 
   Widget _floatingImage(
@@ -214,6 +261,22 @@ class _DetailPageState extends State<DetailPage>
         Positioned.fill(
           child: GradientBackground(color: widget.color),
         ),
+
+
+        if (_animateCart)
+          AnimatedBuilder(
+            animation: _cartCtrl,
+            builder: (_, __) {
+              return Positioned(
+                left: _cxAnimation.value,
+                top: _cyAnimation.value,
+                child: Image.network(
+                  widget.image,
+                  height: _csizeAnimation.value,
+                ),
+              );
+            },
+          ),
 
         // FLOATING IMAGES (hidden after reveal)
         if (!_revealed) ...[
@@ -336,7 +399,7 @@ class _DetailPageState extends State<DetailPage>
                         child: Text(
                           product.title,
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.aldrich(
+                          style: GoogleFonts.ibmPlexSans(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -359,7 +422,7 @@ class _DetailPageState extends State<DetailPage>
                           maxLines: 3,
                           style: GoogleFonts.aldrich(
                             fontSize: 13,
-                            color: Colors.grey.shade400,
+                            color: Colors.grey.shade100,
                             height: 1.6,
                           ),
                         ),
@@ -385,8 +448,8 @@ class _DetailPageState extends State<DetailPage>
                           child: FadeTransition(
                             opacity: _priceFade,
                             child: Text(
-                              '\$${product.price}',
-                              style: GoogleFonts.aldrich(
+                              '\$ ${product.price}',
+                              style: GoogleFonts.agdasima(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -411,16 +474,42 @@ class _DetailPageState extends State<DetailPage>
                     const SizedBox(height: 32),
 
                     // ORDER NOW BUTTON – scales up slowly
-                    Center(
-                      child: ScaleTransition(
-                        scale: _orderScale,
-                        child: FadeTransition(
-                          opacity: _orderFade,
-                          child: _orderNowButton(widget.color),
-                        ),
-                      ),
+                    BlocConsumer<CartManagerCubit,CartMainState>(
+                      listener: (context,state){
+                        if(state is AddToCartSuccessState)
+                          {
+                            animateCart();
+                            ShowSnacBar(context: context, discrip: "Item Added to cart", type: SnackBarType.Success);
+                          }
+                        if(state is AddToCartErrorState)
+                          {
+                            ShowSnacBar(context: context, discrip: state.errMsg, type: SnackBarType.Error);
+                          }
+                      },
+                      builder: (context,state) {
+                        return Center(
+                          child: ScaleTransition(
+                            scale: _orderScale,
+                            child: FadeTransition(
+                              opacity: _orderFade,
+                              child: _orderNowButton(widget.color,(){
+                                context.read<CartManagerCubit>().addToCart(CartItem(
+                                  id: product.id,
+                                    selectedItemImage: widget.image,
+                                    title: product.title,
+                                    price: product.price,
+                                    discrip: product.description,
+                                    brand: "Apple", qunantity:1,
+                                    dateTime: DateTime.now()), widget.image);
+                              }),
+                            ),
+                          ),
+                        );
+                      }
                     ),
-                  ],
+
+
+    ],
                 ),
               );
             },
@@ -531,33 +620,36 @@ Widget _vDivider() => Container(
   color: Colors.white24,
 );
 
-Widget _orderNowButton(Color color) {
-  return Container(
-    width: 220,
-    height: 58,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30),
-      gradient: LinearGradient(
-        colors: [color.withOpacity(.7), color],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+Widget _orderNowButton(Color color,VoidCallback onTap) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: 220,
+      height: 58,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+          colors: [color.withOpacity(.7), color],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(.5),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          )
+        ],
       ),
-      boxShadow: [
-        BoxShadow(
-          color: color.withOpacity(.5),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        )
-      ],
-    ),
-    child: Center(
-      child: Text(
-        "Order Now",
-        style: GoogleFonts.aldrich(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
+      child: Center(
+        child: Text(
+          "Order Now",
+          style: GoogleFonts.aldrich(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
         ),
       ),
     ),

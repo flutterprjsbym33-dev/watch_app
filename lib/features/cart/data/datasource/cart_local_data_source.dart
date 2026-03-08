@@ -26,7 +26,8 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
   @override
   Future<bool> addToCart(CartItem cart,String selectedImage)async {
     try{
-      final existing = cartBox.get(cart.id);
+      final id = "${cart.id}_$selectedImage";
+      final existing = cartBox.get(id);
       if(existing!=null)
         {
           existing.updateQuantity(existing.quantity+1);
@@ -34,7 +35,7 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
           return true;
         }
       else{
-        cartBox.put(cart.id,
+        cartBox.put(id,
             CartModel.fromProduct(product: cart, selectedImage: selectedImage));
         return true;
       }
@@ -68,6 +69,7 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
   @override
   Future<CartItem> increaseQty(String shoeId, int qty)async {
     try{
+
       final beforeUpdate = cartBox.get(shoeId);
       beforeUpdate!.updateQuantity(qty);
       beforeUpdate.save();

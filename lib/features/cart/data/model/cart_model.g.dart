@@ -30,7 +30,7 @@ class CartModelAdapter extends TypeAdapter<CartModel> {
   @override
   void write(BinaryWriter writer, CartModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.selectedImage)
       ..writeByte(1)
@@ -44,7 +44,9 @@ class CartModelAdapter extends TypeAdapter<CartModel> {
       ..writeByte(5)
       ..write(obj.quantity)
       ..writeByte(6)
-      ..write(obj.dateTime);
+      ..write(obj.dateTime)
+      ..writeByte(7)
+      ..write(obj.id);
   }
 
   @override

@@ -5,6 +5,12 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:whatch/features/banners/data/bannereDataSource/bannerRemoteDataSource.dart';
 import 'package:whatch/features/banners/domain/bannerRepo/bannerRepo.dart';
 import 'package:whatch/features/banners/domain/bannerUseCases/getBanners.dart';
+import 'package:whatch/features/cart/data/datasource/cart_local_data_source.dart';
+import 'package:whatch/features/cart/data/repo_implementation/cart_repo_implementation.dart';
+import 'package:whatch/features/cart/domain/repo/cart_repo.dart';
+import 'package:whatch/features/cart/domain/usecase/get_all_cart_items.dart';
+import 'package:whatch/features/cart/domain/usecase/increment_item.dart';
+import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
 import 'package:whatch/features/product/datasource/productremotedatasource/productRemoteDataSource.dart';
 import 'package:whatch/features/product/datasource/productrepoImplemetaion/produtrepoImplementaion.dart';
 import 'package:whatch/features/product/domain/productUseCases/getProduct.dart';
@@ -13,6 +19,7 @@ import 'package:whatch/features/product/view/bloc/productstatecubit.dart';
 
 import '../../features/banners/data/bannerRepoImp/bannerRepoImplementation.dart';
 import '../../features/cart/data/model/cart_model.dart';
+import '../../features/cart/domain/usecase/add_to_car_usecase.dart';
 
 
 class InitAll
@@ -22,9 +29,7 @@ class InitAll
   
   void registerAll()async
   {
-    await Hive.initFlutter();
-    Hive.registerAdapter(CartModelAdapter());
-    await Hive.openBox<CartModel>('cart');
+
 
 
     //-------------------------- Banners ---------------------------------------------
@@ -67,6 +72,31 @@ class InitAll
         GetProduct(productRepositories: getIt<ProductRepositories>()));
 
     getIt.registerLazySingleton<ProductStateCubit>(()=>ProductStateCubit(getProduct: getIt<GetProduct>()));
+
+
+    //Cart Block Cubit
+
+    //CARTLOCALDATASOURCR IMP
+    geiit.registerLazySingleton<CartLocalDataSourceImp>(()=>
+        CartLocalDataSourceImp(cartBox: Hive.box('cart')));
+
+    // CART REPO IMP
+
+    geiit.registerLazySingleton<CartRepository>(()=>CartRepoImplementation
+      (cartLocalDataSourceImp: geiit<CartLocalDataSourceImp>()));
+
+    //Add to Cart USe case
+
+    geiit.registerLazySingleton<AddToCart>(()=>AddToCart(cartRepository: geiit<CartRepository>()));
+
+    geiit.registerLazySingleton<IncrementItem>(()=>IncrementItem(cartRepository: geiit<CartRepository>()));
+
+    geiit.registerLazySingleton<GetCartItems>(()=>GetCartItems(cartRepository: geiit<CartRepository>()));
+
+    geiit.registerLazySingleton<CartManagerCubit>(()=>CartManagerCubit(
+        addToCartUseCase: getIt<AddToCart>(),
+        incrementItem: getIt<IncrementItem>(),
+        getCartItems: getIt<GetCartItems>()));
 
 
 

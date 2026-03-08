@@ -13,13 +13,21 @@ class CartItem
   DateTime dateTime;
   String id;
 
+
+
   CartItem({
-  String? id,
+    required this.id,
     required this.selectedItemImage,
   required this.title,
   required this.price,
   required this.discrip,
-  required this.brand,required this.qunantity,required this.dateTime}):id=Uuid().v4();
+  required this.brand,required this.qunantity,required this.dateTime});
+
+  double get subtotal {
+    final numericPrice =
+        double.tryParse(price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0.0;
+    return numericPrice * qunantity;
+  }
 
 
 }

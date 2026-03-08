@@ -2,6 +2,7 @@
 
  class ProductMapper extends Watch {
    ProductMapper({
+     required super.id,
      required super.title,
      required super.thumbnail,
      required super.rating,
@@ -12,6 +13,7 @@
 
    factory ProductMapper.fromJson(Map<String, dynamic> json) {
      return ProductMapper(
+       id: json['id'].toString(),
        title: json['title'] ?? "",
        thumbnail: json['thumbnail'] ?? "",
        rating: json['rating'].toString(),

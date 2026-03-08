@@ -1,4 +1,5 @@
 class Watch {
+  String id;
   final String title;
   final String thumbnail;
   final String rating;
@@ -7,6 +8,7 @@ class Watch {
   final List<String> images;
 
   Watch({
+    required this.id,
     required this.title,
     required this.thumbnail,
     required this.rating,

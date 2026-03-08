@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatch/app/home.dart';
+import 'package:whatch/features/cart/view/pages/cart_screen.dart';
 import 'package:whatch/utils/appConstant.dart';
 
 
@@ -30,7 +31,9 @@ class FirstHomeScreen  extends StatelessWidget {
         Positioned.fill(
             child: PageView(
               children: const [
-                HomeScreen()
+                HomeScreen(),
+                CartScreen()
+
               ],
             )
         ),

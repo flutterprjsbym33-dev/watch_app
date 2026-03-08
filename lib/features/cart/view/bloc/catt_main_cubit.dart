@@ -27,6 +27,15 @@ class CartManagerCubit extends Cubit<CartMainState>
         ifRight: (sucess)=>emit(AddToCartSuccessState(isSucess: sucess)));
    }
 
+   void getAllCartItems()async
+   {
+     emit(GetAllCartItemsLoadingState());
+     final response =  await getCartItems.call();
+     response.fold(ifLeft: (failure)=>emit(GetAllCartItemsErrorState(errMsg: failure.errMsg)),
+         ifRight: (success)=>emit(GetAllCartItemsSuccessState(cartItems: success)));
+
+   }
+
 
 
 
