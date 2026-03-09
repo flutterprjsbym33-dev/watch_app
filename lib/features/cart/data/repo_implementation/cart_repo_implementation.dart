@@ -47,9 +47,9 @@ class CartRepoImplementation extends CartRepository {
 
 // INCREASE QTY ------------------------------------------------------------------------
   @override
-  Future<Either<Failure, CartItem>> increaseQty(String shoeId, int quantity)async{
+  Future<Either<Failure, CartItem>> increaseQty(String shoeId)async{
     try{
-      final cartItem =  await cartLocalDataSourceImp.increaseQty(shoeId, quantity);
+      final cartItem =  await cartLocalDataSourceImp.increaseQty(shoeId);
       return Right(cartItem);
 
     }on NoInternetException
@@ -69,6 +69,22 @@ class CartRepoImplementation extends CartRepository {
     {
      final itemremoved =  await cartLocalDataSourceImp.removeFromCart(shoeId);
      return Right(itemremoved);
+
+    }on NoInternetException
+    {
+      return Left(NetworkFailure(errMsg:"No Internet Available" ));
+
+    }catch (e)
+    {
+      return Left(ServerFailure(errMsg: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure,CartItem>> decreaseQty(String shoeId)async {
+    try{
+      final cartItem =  await cartLocalDataSourceImp.decreaseQty(shoeId);
+      return Right(cartItem);
 
     }on NoInternetException
     {

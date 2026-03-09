@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:whatch/app/bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
 import 'package:whatch/app/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:whatch/app/widgets/FirstHomeScreen.dart';
@@ -36,7 +37,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<CatoCubit>(
             create: (context)=>CatoCubit()),
         BlocProvider<CartManagerCubit>(
-            create: (context)=>InitAll().getIt<CartManagerCubit>())
+            create: (context)=>InitAll().getIt<CartManagerCubit>()),
+        BlocProvider<BottomNavCubitHide>(
+            create: (context)=>InitAll().getIt<BottomNavCubitHide>())
       ],
         child:  MaterialApp(
 

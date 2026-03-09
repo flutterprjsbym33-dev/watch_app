@@ -10,7 +10,9 @@ abstract class CartLocalDataSource{
 
   Future<bool> removeFromCart(String shoeId);
 
-  Future<CartItem> increaseQty(String shoeId,int qty);
+  Future<CartItem> increaseQty(String shoeId);
+
+  Future<CartItem> decreaseQty(String shoeId);
 
   Future<List<CartItem>> getAllCartItems();
 }
@@ -67,11 +69,11 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
 
 
   @override
-  Future<CartItem> increaseQty(String shoeId, int qty)async {
+  Future<CartItem> increaseQty(String shoeId)async {
     try{
 
       final beforeUpdate = cartBox.get(shoeId);
-      beforeUpdate!.updateQuantity(qty);
+      beforeUpdate!.updateQuantity(beforeUpdate.quantity+1);
       beforeUpdate.save();
       final updateQtyProduct = cartBox.get(shoeId);
       return updateQtyProduct!.fromModel(cartItem: updateQtyProduct);
@@ -92,6 +94,27 @@ class CartLocalDataSourceImp extends CartLocalDataSource{
       cartBox.delete(shoeId);
       return true;
 
+
+    } on SocketException
+    {
+      throw NoInternetException();
+
+    } catch(e)
+    {
+      throw CatchedExpection();
+    }
+  }
+
+
+  @override
+  Future<CartItem> decreaseQty(String shoeId)async{
+    try{
+
+      final beforeUpdate = cartBox.get(shoeId);
+      beforeUpdate!.updateQuantity(beforeUpdate.quantity-1);
+      beforeUpdate.save();
+      final updateQtyProduct = cartBox.get(shoeId);
+      return updateQtyProduct!.fromModel(cartItem: updateQtyProduct);
 
     } on SocketException
     {

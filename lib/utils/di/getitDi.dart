@@ -8,6 +8,7 @@ import 'package:whatch/features/banners/domain/bannerUseCases/getBanners.dart';
 import 'package:whatch/features/cart/data/datasource/cart_local_data_source.dart';
 import 'package:whatch/features/cart/data/repo_implementation/cart_repo_implementation.dart';
 import 'package:whatch/features/cart/domain/repo/cart_repo.dart';
+import 'package:whatch/features/cart/domain/usecase/decrement_item.dart';
 import 'package:whatch/features/cart/domain/usecase/get_all_cart_items.dart';
 import 'package:whatch/features/cart/domain/usecase/increment_item.dart';
 import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
@@ -17,6 +18,7 @@ import 'package:whatch/features/product/domain/productUseCases/getProduct.dart';
 import 'package:whatch/features/product/domain/productrepo/peoductRepo.dart';
 import 'package:whatch/features/product/view/bloc/productstatecubit.dart';
 
+import '../../app/bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
 import '../../features/banners/data/bannerRepoImp/bannerRepoImplementation.dart';
 import '../../features/cart/data/model/cart_model.dart';
 import '../../features/cart/domain/usecase/add_to_car_usecase.dart';
@@ -91,12 +93,20 @@ class InitAll
 
     geiit.registerLazySingleton<IncrementItem>(()=>IncrementItem(cartRepository: geiit<CartRepository>()));
 
+    geiit.registerLazySingleton<DecrementItem>(()=>DecrementItem(cartRepository: geiit<CartRepository>()));
+
     geiit.registerLazySingleton<GetCartItems>(()=>GetCartItems(cartRepository: geiit<CartRepository>()));
 
     geiit.registerLazySingleton<CartManagerCubit>(()=>CartManagerCubit(
         addToCartUseCase: getIt<AddToCart>(),
         incrementItem: getIt<IncrementItem>(),
-        getCartItems: getIt<GetCartItems>()));
+        getCartItems: getIt<GetCartItems>(),
+        decrementItem: getIt<DecrementItem>()),
+    );
+
+    //BOTTOM NAV CUBIT HIDE
+
+    getIt.registerLazySingleton<BottomNavCubitHide>(()=>BottomNavCubitHide());
 
 
 

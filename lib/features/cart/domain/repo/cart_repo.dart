@@ -15,7 +15,9 @@ abstract class CartRepository {
 
 //update quantity
 
-  Future<Either<Failure,CartItem>> increaseQty(String shoeId,int quantity);
+  Future<Either<Failure,CartItem>> increaseQty(String shoeId);
+
+  Future<Either<Failure,CartItem>> decreaseQty(String shoeId);
 
   Future<Either<Failure,List<CartItem>>> getAllCartItems();
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:whatch/app/bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
 import 'package:whatch/features/cart/domain/entity/cart_entity.dart';
 import 'package:whatch/features/cart/view/bloc/cart_states.dart';
 import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
@@ -29,6 +30,7 @@ class _CartScreenState extends State<CartScreen> {
 
     super.initState();
     context.read<CartManagerCubit>().getAllCartItems();
+    context.read<BottomNavCubitHide>().show();
 
   }
 
@@ -80,12 +82,12 @@ class _CartScreenState extends State<CartScreen> {
                                 ),),
                                 SizedBox(height: 5,),
                                 Container(
-
-                                  height: height*0.15
+                                  height: height*0.16
                                   ,width: double.infinity,
                                   child: LayoutBuilder(
                                     builder: (context,constraints) {
-                                      return CartPerItem(height: constraints.maxHeight, width: constraints.maxWidth, cartItem: state.cartItems[index]);
+                                      return CartPerItem(height: constraints.maxHeight,
+                                          width: constraints.maxWidth, cartItem: state.cartItems[index]);
                                     }
                                   ),
                                 )

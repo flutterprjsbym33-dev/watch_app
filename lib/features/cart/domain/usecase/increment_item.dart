@@ -9,8 +9,8 @@ class IncrementItem {
   CartRepository cartRepository;
   IncrementItem({required this.cartRepository});
 
-  Future<Either<Failure,CartItem>> call(String shoeId,int qty)
+  Future<Either<Failure,CartItem>> call(String shoeId)
   {
-     return cartRepository.increaseQty(shoeId, qty);
+     return cartRepository.increaseQty(shoeId);
   }
 }

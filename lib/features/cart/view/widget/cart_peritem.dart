@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:whatch/features/cart/domain/entity/cart_entity.dart';
+import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
 import 'package:whatch/utils/appConstant.dart';
 import 'package:intl/intl.dart';
 
@@ -29,6 +31,8 @@ class CartPerItem extends StatelessWidget {
                       icon: Icon(Icons.check_box_outline_blank_rounded),
                     ),
                   ),
+
+
 
                   // Selected cart image - Centered vertically
                   Center(
@@ -67,23 +71,77 @@ class CartPerItem extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 4),
+
+                          //Cart Product Discrip ---------------------------------------
+
                           Text(
                             cartItem.discrip,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.akatab(
-                              fontWeight: FontWeight.w200,
+
+                              color: Colors.grey.shade700,
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            "\$ ${cartItem.price}",
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.akatab(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
+                          SizedBox(height: 10),
+
+
+                          //Cart Item Price and qty row --------------------------------------------------------------------------
+
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              //Cart Item Price ---------------------------------------
+                              Text(
+                                "\$.${cartItem.subtotal.toStringAsFixed(2)}",
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.akatab(
+                                  color: AppConstant.orange,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+
+                              //Cart Item Qty Incrementator and decmentator
+
+                              Row(
+                                children: [
+                                  Container(
+                                    height: height*0.15,width: 25,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                        color: Colors.grey.shade300
+                                    ),
+                                    child: Center(
+                                      child: IconButton(onPressed: (){
+                                        context.read<CartManagerCubit>().decreasseCartQty(cartItem.id,cartItem.selectedItemImage);
+                                      },
+                                        padding: EdgeInsets.only(top: 9),
+                                        icon: Icon(Icons.maximize_sharp,size: 15,)),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Text('${cartItem.qunantity}'),
+                                  SizedBox(width: 8,),
+                                  Container(
+                                    height: height*0.15,width: 25,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.grey.shade300
+                                    ),
+                                    child: Center(
+                                      child: IconButton(onPressed: (){
+                                        context.read<CartManagerCubit>().increaseCartQty(cartItem.id,cartItem.selectedItemImage);
+                                      }, padding: EdgeInsets.zero,
+                                          icon: Icon(Icons.add,size: 15,)),
+                                    ),
+                                  ),
+
+
+                              ],)
+                            ],
                           ),
                         ],
                       ),

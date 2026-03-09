@@ -9,6 +9,7 @@ class HiveInit{
     Hive.registerAdapter(CartModelAdapter());
 
      // reset corrupted data
+   // await Hive.deleteBoxFromDisk('cart');
 
 
     await Hive.openBox<CartModel>('cart');

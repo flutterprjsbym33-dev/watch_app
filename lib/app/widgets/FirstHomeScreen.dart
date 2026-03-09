@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:whatch/app/home.dart';
 import 'package:whatch/features/cart/view/pages/cart_screen.dart';
 import 'package:whatch/utils/appConstant.dart';
+
+import '../bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
 
 
 class BottomItems {
@@ -38,63 +41,78 @@ class FirstHomeScreen  extends StatelessWidget {
             )
         ),
        
-       Align(
-         alignment: Alignment.bottomCenter,
-         child: Padding(
-           padding: const EdgeInsets.all(5.0),
-           child: Container(
-             padding: EdgeInsets.all(8),
-             decoration: BoxDecoration(
-                 color: AppConstant.black2,
-               borderRadius: BorderRadius.circular(20)
-               
-             ),
-             height: 70,width: double.infinity,
-             child: Row(
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               mainAxisSize: MainAxisSize.min,
-               children: List.generate(navbarItens.length, (index)=> LayoutBuilder(
-                 builder: (context,constraintss) {
-                   return Container(
-                     padding: EdgeInsets.all(5),
-                     height: constraintss.maxHeight,width: 65,
-                     decoration: selectedIndex == index ?
-                     BoxDecoration(
-                       borderRadius: BorderRadius.circular(25),
-                       gradient: LinearGradient(colors: [
-                         Colors.orange.shade200,
-                         AppConstant.orange.withOpacity(0.5)
-                       ]),
-                       boxShadow: [
-                         BoxShadow(
-                           color: AppConstant.black2,
-                           blurRadius: 12
-                         )
-                       ]
-                     ) : null,
-                     child: Center(
-                       child: Column(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           Image.asset(navbarItens[index].icons,
-                               height:  selectedIndex == index ? constraintss.maxHeight*0.3 : constraintss.maxHeight*0.5),
-                           SizedBox(height: 5,),
-                           selectedIndex == index ?
-                           Text(navbarItens[index].name,style:
-                           TextStyle(fontSize: 10,color: Colors.white,
-                           decoration: TextDecoration.none),
-                           overflow: TextOverflow.ellipsis,
-                            ) : SizedBox()
-                         ],
-                       ),
+       //Bottom bar ------------------------------------------------------------
+       
+       BlocBuilder<BottomNavCubitHide,bool>(
+         builder: (context,visible) {
+           return AnimatedSlide(
+             offset:  visible ? Offset(0, 0) : Offset(0,1),
+             duration: Duration(milliseconds: 500),
+             child: Align(
+               alignment: Alignment.bottomCenter,
+               child: GestureDetector(
+                 onTap: (){
+
+                 },
+                 child: Padding(
+                   padding: const EdgeInsets.all(5.0),
+                   child: Container(
+                     padding: EdgeInsets.all(8),
+                     decoration: BoxDecoration(
+                         color: AppConstant.black2,
+                       borderRadius: BorderRadius.circular(20)
+
                      ),
-                   );
-                 }
-               )),
+                     height: 70,width: double.infinity,
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisSize: MainAxisSize.min,
+                       children: List.generate(navbarItens.length, (index)=> LayoutBuilder(
+                         builder: (context,constraintss) {
+                           return Container(
+                             padding: EdgeInsets.all(5),
+                             height: constraintss.maxHeight,width: 65,
+                             decoration: selectedIndex == index ?
+                             BoxDecoration(
+                               borderRadius: BorderRadius.circular(25),
+                               gradient: LinearGradient(colors: [
+                                 Colors.orange.shade200,
+                                 AppConstant.orange.withOpacity(0.5)
+                               ]),
+                               boxShadow: [
+                                 BoxShadow(
+                                   color: AppConstant.black2,
+                                   blurRadius: 12
+                                 )
+                               ]
+                             ) : null,
+                             child: Center(
+                               child: Column(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 children: [
+                                   Image.asset(navbarItens[index].icons,
+                                       height:  selectedIndex == index ? constraintss.maxHeight*0.3 : constraintss.maxHeight*0.5),
+                                   SizedBox(height: 5,),
+                                   selectedIndex == index ?
+                                   Text(navbarItens[index].name,style:
+                                   TextStyle(fontSize: 10,color: Colors.white,
+                                   decoration: TextDecoration.none),
+                                   overflow: TextOverflow.ellipsis,
+                                    ) : SizedBox()
+                                 ],
+                               ),
+                             ),
+                           );
+                         }
+                       )),
+                     ),
+                   ),
+                 ),
+               ),
              ),
-           ),
-         ),
+           );
+         }
        )
       ],
 
