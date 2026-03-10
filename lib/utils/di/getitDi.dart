@@ -16,9 +16,11 @@ import 'package:whatch/features/product/datasource/productremotedatasource/produ
 import 'package:whatch/features/product/datasource/productrepoImplemetaion/produtrepoImplementaion.dart';
 import 'package:whatch/features/product/domain/productUseCases/getProduct.dart';
 import 'package:whatch/features/product/domain/productrepo/peoductRepo.dart';
+import 'package:whatch/features/product/view/bloc/cart_selector-cubit/cart_selector_index.dart';
 import 'package:whatch/features/product/view/bloc/productstatecubit.dart';
 
 import '../../app/bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
+import '../../app/bloc/bottom_navigator_cubit/bottom_nav_cubit.dart';
 import '../../features/banners/data/bannerRepoImp/bannerRepoImplementation.dart';
 import '../../features/cart/data/model/cart_model.dart';
 import '../../features/cart/domain/usecase/add_to_car_usecase.dart';
@@ -107,6 +109,11 @@ class InitAll
     //BOTTOM NAV CUBIT HIDE
 
     getIt.registerLazySingleton<BottomNavCubitHide>(()=>BottomNavCubitHide());
+    getIt.registerLazySingleton<BottomNavigatorCubit>(()=>BottomNavigatorCubit());
+
+    getIt.registerLazySingleton<CartSelectorCubit>(()=>CartSelectorCubit());
+
+
 
 
 

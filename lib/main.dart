@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:whatch/app/bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
+import 'package:whatch/app/bloc/bottom_navigator_cubit/bottom_nav_cubit.dart';
 import 'package:whatch/app/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:whatch/app/widgets/FirstHomeScreen.dart';
 import 'package:whatch/features/banners/domain/bannerUseCases/getBanners.dart';
 import 'package:whatch/features/banners/view/bloc/fetchbannerscubit.dart';
 import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
+import 'package:whatch/features/product/view/bloc/cart_selector-cubit/cart_selector_index.dart';
 import 'package:whatch/features/product/view/bloc/catocubit/catoCubit.dart';
 import 'package:whatch/features/product/view/bloc/productstatecubit.dart';
 import 'package:whatch/utils/di/getitDi.dart';
@@ -39,7 +41,11 @@ class MyApp extends StatelessWidget {
         BlocProvider<CartManagerCubit>(
             create: (context)=>InitAll().getIt<CartManagerCubit>()),
         BlocProvider<BottomNavCubitHide>(
-            create: (context)=>InitAll().getIt<BottomNavCubitHide>())
+            create: (context)=>InitAll().getIt<BottomNavCubitHide>()),
+        BlocProvider<BottomNavigatorCubit>(
+            create: (context)=>InitAll().getIt<BottomNavigatorCubit>()),
+        BlocProvider<CartSelectorCubit>(
+            create: (context)=>InitAll().getIt<CartSelectorCubit>())
       ],
         child:  MaterialApp(
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:whatch/app/bloc/bottom_nav_bloc/bottom_nav_bloc.dart';
 import 'package:whatch/features/cart/domain/entity/cart_entity.dart';
@@ -36,6 +37,7 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final visible = context.watch<BottomNavCubitHide>().state;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -48,6 +50,18 @@ class _CartScreenState extends State<CartScreen> {
           )
         ),),
       ),
+    //Bottom CheckOutSection -------------------------------------------------------
+    bottomNavigationBar:  visible ? null : SizedBox(
+      height: height*0.12,width: double.infinity,
+      child: Padding(padding: EdgeInsets.all(10),
+      child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.red
+          ),
+      ),
+      )
+    ),
     body: BlocBuilder<CartManagerCubit,CartMainState>(
           builder: (context,state)
       {
@@ -87,7 +101,7 @@ class _CartScreenState extends State<CartScreen> {
                                   child: LayoutBuilder(
                                     builder: (context,constraints) {
                                       return CartPerItem(height: constraints.maxHeight,
-                                          width: constraints.maxWidth, cartItem: state.cartItems[index]);
+                                          width: constraints.maxWidth, cartItem: state.cartItems[index],index: index, items: state.cartItems,);
                                     }
                                   ),
                                 )
