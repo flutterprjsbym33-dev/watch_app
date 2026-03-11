@@ -9,6 +9,7 @@ import 'package:whatch/app/widgets/FirstHomeScreen.dart';
 import 'package:whatch/features/banners/domain/bannerUseCases/getBanners.dart';
 import 'package:whatch/features/banners/view/bloc/fetchbannerscubit.dart';
 import 'package:whatch/features/cart/view/bloc/catt_main_cubit.dart';
+import 'package:whatch/features/cart/view/bloc/subtotalcubit/subtotalcubit.dart';
 import 'package:whatch/features/product/view/bloc/cart_selector-cubit/cart_selector_index.dart';
 import 'package:whatch/features/product/view/bloc/catocubit/catoCubit.dart';
 import 'package:whatch/features/product/view/bloc/productstatecubit.dart';
@@ -45,7 +46,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<BottomNavigatorCubit>(
             create: (context)=>InitAll().getIt<BottomNavigatorCubit>()),
         BlocProvider<CartSelectorCubit>(
-            create: (context)=>InitAll().getIt<CartSelectorCubit>())
+            create: (context)=>InitAll().getIt<CartSelectorCubit>()),
+        BlocProvider<SubTotalCubit>(
+            create: (context)=>SubTotalCubit())
       ],
         child:  MaterialApp(
 
